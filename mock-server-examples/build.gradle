@@ -1,0 +1,5 @@
+dependencies {
+    testImplementation libs.groovy.all
+    testImplementation libs.bundles.test.spock.core
+    testImplementation libs.bundles.test.mock.server
+}

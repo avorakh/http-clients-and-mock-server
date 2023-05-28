@@ -1,0 +1,82 @@
+group = 'dev.avorakh.mock.server'
+rootProject.version = '0.1.0'
+
+subprojects {
+
+    apply plugin: 'java-library'
+    apply plugin: 'groovy'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly libs.lombok
+        annotationProcessor libs.lombok
+        compileOnly libs.jetbrains.annotations
+
+        testCompileOnly libs.lombok
+        testAnnotationProcessor libs.lombok
+        testCompileOnly libs.jetbrains.annotations
+    }
+
+    sourceSets {
+
+        integrationTest {
+            java {
+                srcDirs = ['src/it/java']
+            }
+            groovy {
+                srcDirs = ['src/it/groovy']
+            }
+            resources {
+                srcDirs = ['src/it/resources']
+            }
+            compileClasspath += main.output 
+            runtimeClasspath += main.output
+        }
+    }
+    
+
+    tasks.withType(Test).configureEach {
+        // Using JUnitPlatform for running tests
+        useJUnitPlatform()
+        
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+
+    task integrationTest(type: Test) {
+        group = 'verification'
+        shouldRunAfter(test) 
+        
+        testClassesDirs = sourceSets.integrationTest.output.classesDirs
+        classpath = sourceSets.integrationTest.runtimeClasspath
+    }
+
+
+    tasks.named('check') {
+        dependsOn(integrationTest)
+    }
+
+    configurations {
+        integrationTestImplementation.extendsFrom testImplementation
+        integrationTestRuntime.extendsFrom testRuntime
+
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+}
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}

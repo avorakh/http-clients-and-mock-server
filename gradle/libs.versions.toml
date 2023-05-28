@@ -1,0 +1,20 @@
+[versions]
+lombok = '1.18.28'
+jb-annotation = '24.0.1'
+
+groovy = '4.0.12'
+spock = '2.4-M1-groovy-4.0'
+mock-server = '5.15.0'
+[libraries]
+lombok = { module = 'org.projectlombok:lombok', version.ref = 'lombok' }
+jetbrains-annotations = { module = 'org.jetbrains:annotations', version.ref = 'jb-annotation' }
+
+groovy-all = { module = 'org.apache.groovy:groovy-all', version.ref = 'groovy' }
+spock-core = { module = 'org.spockframework:spock-core', version.ref = 'spock' }
+
+mockserver-netty  = { module = 'org.mock-server:mockserver-netty', version.ref = 'mock-server' }
+mockserver-client-java  = { module = 'org.mock-server:mockserver-client-java', version.ref = 'mock-server' }
+
+[bundles]
+test-spock-core = ["spock-core", 'groovy-all']
+test-mock-server = ["mockserver-client-java", 'mockserver-netty']
